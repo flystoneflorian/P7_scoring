@@ -17,7 +17,7 @@ X.drop(columns=columns_to_drop,inplace=True)
 #X.drop(columns=["SK_ID_CURR"],inplace=True) 
 
 #model
-path = 'C:\\P7_git\\python\\'
+path = 'C:\\P7_git\\python\\APP\\'
 model = joblib.load(path + 'second_best_model.joblib')
 
 # 2. Create the app object

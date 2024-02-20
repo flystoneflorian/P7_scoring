@@ -23,7 +23,7 @@ shap.initjs()
 st.set_page_config(page_title="Probabilité de remboursement de crédit", layout="wide")
 st.markdown("<h1 style='text-align: center; color: #5A5E6B;'>Probabilité de remboursement de crédit</h1>", unsafe_allow_html=True)
 
-application_train = pd.read_csv("C:/P7_git/python/APP/application_train.csv")
+application_train = pd.read_csv("C:/P7_git/python/APP/app_train.csv")
 application_test = pd.read_csv("C:/P7_git/python/APP/application_test.csv")
 # Chargement des données
 df = pd.read_csv("C:/P7_git/python/APP/test_api.csv")
@@ -36,7 +36,7 @@ df_shap=df.copy()
 
 
 # Chargement du modèle
-model = joblib.load(r'/P7_git/python/second_best_model.joblib')
+model = joblib.load(r'/P7_git/python/APP/second_best_model.joblib')
 
 # Prétraitement et feature engineering
 def feature_engineering(df):
@@ -202,11 +202,11 @@ with col1:
                 pred=res.json()['prediction']
 
             if pred == 0:
-                st.success(f"Probabilité : {score}")
-                st.markdown("<h2 style='text-align: center; color: #44be6e;'>Crédit sans risque</h2>", unsafe_allow_html=True)
+                    st.success(f"Probabilité : {score}")
+                    st.markdown("<h2 style='text-align: center; color: #44be6e;'>Crédit sans risque</h2>", unsafe_allow_html=True)
             else:
-                st.error(f"Probabilité: {score}")
-                st.markdown("<h2 style='text-align: center; color: #ff3d41;'>Crédit à risque</h2>", unsafe_allow_html=True)
+                    st.error(f"Probabilité: {score}")
+                    st.markdown("<h2 style='text-align: center; color: #ff3d41;'>Crédit à risque</h2>", unsafe_allow_html=True)
 
         if infos_client:
             st.markdown("<h1 style='text-align: center; color: #5A5E6B; font-size: 24px;'>Informations relatives au client</h1>", unsafe_allow_html=True)
@@ -243,6 +243,7 @@ with col1:
             st_shap(shap.summary_plot(shap_values, client_data, feature_names=df_shap.columns.tolist(), max_display = number))  
         if comparaison:
             st.markdown("<h1 style='text-align: center; color: #5A5E6B; font-size: 24px;'>Comparaison aux autres clients</h1>", unsafe_allow_html=True)
+
             explainer, shap_values = get_shap_global(lgbmc_model, df_transformed)
             st_shap(shap.summary_plot(shap_values, df_transformed, feature_names=df_shap.columns.tolist(), max_display = number))
             ap_train = feature_engineering(application_train)
