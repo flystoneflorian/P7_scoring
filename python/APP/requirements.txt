@@ -1,0 +1,15 @@
+fastapi==0.109.0
+pandas==1.5.3
+pydantic==2.6.0
+uvicorn==0.23.2
+joblib==1.1.1
+streamlit==1.30.0
+streamlit-shap==1.0.2
+numpy==1.24.1
+DateTime==5.1
+requests==2.31.0
+matplotlib==3.6.3
+plotly-express==0.4.1
+seaborn==0.12.2
+json5==0.9.11
+shap==0.42.1
