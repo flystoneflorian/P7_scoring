@@ -3,7 +3,6 @@ pandas==1.5.3
 pydantic==2.6.0
 uvicorn==0.23.2
 scikit-learn==1.2.1
-sklearn==0.0.post7
 joblib==1.1.1
 streamlit==1.30.0
 streamlit-shap==1.0.2
