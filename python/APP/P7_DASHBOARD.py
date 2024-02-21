@@ -15,16 +15,23 @@ import seaborn as sns
 from streamlit_shap import st_shap
 import shap
 from shap import TreeExplainer
+import os
 
 #shap.initjs()
 
 st.set_page_config(page_title="Probabilité de remboursement de crédit", layout="wide")
 st.markdown("<h1 style='text-align: center; color: #5A5E6B;'>Probabilité de remboursement de crédit</h1>", unsafe_allow_html=True)
 
-application_train = pd.read_csv("app_train.csv")
-application_test = pd.read_csv("application_test.csv")
 # Chargement des données
-df = pd.read_csv("test_api.csv")
+current_dir = os.path.dirname(os.path.realpath(__file__))
+app_train_path = os.path.join(current_dir, "app_train.csv")
+app_test_path = os.path.join(current_dir, "application_test.csv")
+df_path = os.path.join(current_dir, "test_api.csv")
+model_path = os.path.join(current_dir, "second_best_model.joblib")
+application_train = pd.read_csv(app_train_path)
+application_test = pd.read_csv(app_train_path)
+df=pd.read_csv(df_path)
+
 columns_to_drop = ['TARGET', 'Unnamed: 0.1']
 df=df.drop(columns=columns_to_drop)
 df["SK_ID_CURR"]=df["SK_ID_CURR"].convert_dtypes()
@@ -34,7 +41,7 @@ df_shap=df.copy()
 
 
 # Chargement du modèle
-model = joblib.load(r'second_best_model.joblib')
+model = joblib.load(model_path)
 
 # Prétraitement et feature engineering
 def feature_engineering(df):
