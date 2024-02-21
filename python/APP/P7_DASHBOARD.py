@@ -21,10 +21,10 @@ from shap import TreeExplainer
 st.set_page_config(page_title="Probabilité de remboursement de crédit", layout="wide")
 st.markdown("<h1 style='text-align: center; color: #5A5E6B;'>Probabilité de remboursement de crédit</h1>", unsafe_allow_html=True)
 
-application_train = pd.read_csv("C:/P7_git/python/APP/app_train.csv")
-application_test = pd.read_csv("C:/P7_git/python/APP/application_test.csv")
+application_train = pd.read_csv("app_train.csv")
+application_test = pd.read_csv("application_test.csv")
 # Chargement des données
-df = pd.read_csv("C:/P7_git/python/APP/test_api.csv")
+df = pd.read_csv("test_api.csv")
 columns_to_drop = ['TARGET', 'Unnamed: 0.1']
 df=df.drop(columns=columns_to_drop)
 df["SK_ID_CURR"]=df["SK_ID_CURR"].convert_dtypes()
@@ -34,7 +34,7 @@ df_shap=df.copy()
 
 
 # Chargement du modèle
-model = joblib.load(r'/P7_git/python/APP/second_best_model.joblib')
+model = joblib.load(r'second_best_model.joblib')
 
 # Prétraitement et feature engineering
 def feature_engineering(df):
