@@ -16,7 +16,7 @@ from streamlit_shap import st_shap
 import shap
 from shap import TreeExplainer
 
-shap.initjs()
+#shap.initjs()
 
 st.set_page_config(page_title="Probabilité de remboursement de crédit", layout="wide")
 st.markdown("<h1 style='text-align: center; color: #5A5E6B;'>Probabilité de remboursement de crédit</h1>", unsafe_allow_html=True)
