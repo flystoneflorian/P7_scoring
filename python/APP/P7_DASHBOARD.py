@@ -15,9 +15,7 @@ import seaborn as sns
 from streamlit_shap import st_shap
 import shap
 from shap import TreeExplainer
-from catboost import Pool
-from shap.maskers import Independent
-import os
+
 shap.initjs()
 
 st.set_page_config(page_title="Probabilité de remboursement de crédit", layout="wide")
