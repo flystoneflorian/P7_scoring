@@ -8,7 +8,13 @@ import joblib
 import os
 
 #data
-df=pd.read_csv('test_api.csv')
+current_dir = os.path.dirname(os.path.realpath(__file__))
+#app_train_path = os.path.join(current_dir, "app_train.csv")
+df_path = os.path.join(current_dir, "test_api.csv")
+model_path = os.path.join(current_dir, "second_best_model.joblib")
+
+#application_train = pd.read_csv(app_train_path)
+df=pd.read_csv(df_path)
 df["SK_ID_CURR"]=df["SK_ID_CURR"].convert_dtypes()
 sk=df["SK_ID_CURR"]
 df.index=sk
@@ -18,8 +24,7 @@ X.drop(columns=columns_to_drop,inplace=True)
 #X.drop(columns=["SK_ID_CURR"],inplace=True) 
 
 #model
-#path = 'C:\\P7_git\\python\\APP\\'
-model = joblib.load('second_best_model.joblib')
+model = joblib.load(model_path)
 
 # 2. Create the app object
 app = FastAPI()
