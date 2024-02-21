@@ -7,7 +7,7 @@ from pydantic import BaseModel
 import joblib
 
 #data
-df=pd.read_csv('C:\\P7_git\\python\\APP\\test_api.csv')
+df=pd.read_csv('test_api.csv')
 df["SK_ID_CURR"]=df["SK_ID_CURR"].convert_dtypes()
 sk=df["SK_ID_CURR"]
 df.index=sk
