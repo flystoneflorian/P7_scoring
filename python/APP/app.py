@@ -5,6 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
+import os
 
 #data
 df=pd.read_csv('test_api.csv')
@@ -17,8 +18,8 @@ X.drop(columns=columns_to_drop,inplace=True)
 #X.drop(columns=["SK_ID_CURR"],inplace=True) 
 
 #model
-path = 'C:\\P7_git\\python\\APP\\'
-model = joblib.load(path + 'second_best_model.joblib')
+#path = 'C:\\P7_git\\python\\APP\\'
+model = joblib.load('second_best_model.joblib')
 
 # 2. Create the app object
 app = FastAPI()
