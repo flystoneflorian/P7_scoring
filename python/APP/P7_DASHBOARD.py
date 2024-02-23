@@ -297,7 +297,7 @@ with col2:
 
     if st.button("Calculer la probabilité d'accorder un crédit"):
 
-        sim_df=pd.read_csv('sim_path')
+        sim_df=pd.read_csv(sim_path)
         sim_df=sim_df.round(0)
         columns_to_drop = [ 'Unnamed: 0.1', 'TARGET']
         sim_df=sim_df.drop(columns=columns_to_drop)
