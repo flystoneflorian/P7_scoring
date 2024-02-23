@@ -185,7 +185,8 @@ with col1:
 
     risque = st.sidebar.checkbox('Risque de defaillance sur le crédit', key='risque_defaillance')
 
-    api_url = 'http://127.0.0.1:8000/predictions'
+    #api_url = 'http://127.0.0.1:8000/predictions'
+    api_url = 'https://florianscoringapi-aec4d97f50b6.herokuapp.com/predictions'
     data = {"ID: int(id_filter)"}
     #res = requests.post(url=api_url, data=json.dumps(inputs))
     res = requests.post(url=api_url, json=inputs)
