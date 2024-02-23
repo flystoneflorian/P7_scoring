@@ -29,7 +29,7 @@ app_test_path = os.path.join(current_dir, "application_test.csv")
 df_path = os.path.join(current_dir, "test_api.csv")
 model_path = os.path.join(current_dir, "second_best_model.joblib")
 application_train = pd.read_csv(app_train_path)
-application_test = pd.read_csv(app_train_path)
+application_test = pd.read_csv(app_test_path)
 df=pd.read_csv(df_path)
 
 columns_to_drop = ['TARGET', 'Unnamed: 0.1']
@@ -296,7 +296,8 @@ with col2:
 
     if st.button("Calculer la probabilité d'accorder un crédit"):
 
-        sim_df=pd.read_csv(r'C:\cygwin64\openclassrooms\Projet_7\env\python\Notebook\sim_df.csv')
+        sim_df=pd.read_csv('sim_df.csv')
+        #sim_df=pd.read_csv(r'C:\cygwin64\openclassrooms\Projet_7\env\python\Notebook\sim_df.csv')
         sim_df=sim_df.round(0)
         columns_to_drop = [ 'Unnamed: 0.1', 'TARGET']
         sim_df=sim_df.drop(columns=columns_to_drop)
