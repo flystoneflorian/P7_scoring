@@ -28,6 +28,7 @@ app_train_path = os.path.join(current_dir, "app_train.csv")
 app_test_path = os.path.join(current_dir, "application_test.csv")
 df_path = os.path.join(current_dir, "test_api.csv")
 model_path = os.path.join(current_dir, "second_best_model.joblib")
+sim_path = os.path.join(current_dir, "sim_df.csv")
 application_train = pd.read_csv(app_train_path)
 application_test = pd.read_csv(app_test_path)
 df=pd.read_csv(df_path)
@@ -56,12 +57,12 @@ def feature_engineering(df):
 def get_shap_values(model, df_transformed, client_id):
     explainer = shap.Explainer(model, df_transformed)
     client_data = df_transformed.loc[[client_id]]
-    shap_values = explainer.shap_values(client_data)
+    shap_values = explainer.shap_values(client_data, check_additivity=False)
     return explainer, shap_values, client_data
 
 def get_shap_global(model, df_transformed):
     explainer = shap.Explainer(model, df_transformed)
-    shap_values = explainer.shap_values(df_transformed)
+    shap_values = explainer.shap_values(df_transformed, check_additivity=False)
     return explainer, shap_values
 
 def graphique(df,feature, features_client, title):
@@ -296,8 +297,7 @@ with col2:
 
     if st.button("Calculer la probabilité d'accorder un crédit"):
 
-        sim_df=pd.read_csv('sim_df.csv')
-        #sim_df=pd.read_csv(r'C:\cygwin64\openclassrooms\Projet_7\env\python\Notebook\sim_df.csv')
+        sim_df=pd.read_csv('sim_path')
         sim_df=sim_df.round(0)
         columns_to_drop = [ 'Unnamed: 0.1', 'TARGET']
         sim_df=sim_df.drop(columns=columns_to_drop)
