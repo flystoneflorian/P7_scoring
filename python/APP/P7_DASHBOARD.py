@@ -1,23 +1,18 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from datetime import datetime, date
+from datetime import date
 import re
 import requests
 import math
-import plotly.graph_objects as go 
 import matplotlib.pyplot as plt
-import plotly.express as px
 import seaborn as sns
 import json
 import joblib
 import seaborn as sns
 from streamlit_shap import st_shap
 import shap
-from shap import TreeExplainer
 import os
-
-#shap.initjs()
 
 st.set_page_config(page_title="Probabilité de remboursement de crédit", layout="wide")
 st.markdown("<h1 style='text-align: center; color: #5A5E6B;'>Probabilité de remboursement de crédit</h1>", unsafe_allow_html=True)
@@ -28,8 +23,9 @@ app_train_path = os.path.join(current_dir, "app_train.csv")
 app_test_path = os.path.join(current_dir, "application_test.csv")
 df_path = os.path.join(current_dir, "test_api.csv")
 model_path = os.path.join(current_dir, "second_best_model.joblib")
+sim_path = os.path.join(current_dir, "sim_df.csv")
 application_train = pd.read_csv(app_train_path)
-application_test = pd.read_csv(app_train_path)
+application_test = pd.read_csv(app_test_path)
 df=pd.read_csv(df_path)
 
 columns_to_drop = ['TARGET', 'Unnamed: 0.1']
@@ -38,6 +34,7 @@ df["SK_ID_CURR"]=df["SK_ID_CURR"].convert_dtypes()
 sk=df["SK_ID_CURR"]
 df.index=sk
 df_shap=df.copy()
+df_comp=df.copy()
 
 
 # Chargement du modèle
@@ -45,6 +42,10 @@ model = joblib.load(model_path)
 
 # Prétraitement et feature engineering
 def feature_engineering(df):
+    ###
+    #Cette fonction modifie quelques noms de variables pour plus de lisibilité
+    ###
+
     new_df = pd.DataFrame()
     new_df = df.copy()
     new_df['CODE_GENDER'] = df['CODE_GENDER'].apply(lambda x: 'Femme' if x == 1 else 'Homme')
@@ -185,11 +186,10 @@ with col1:
 
     risque = st.sidebar.checkbox('Risque de defaillance sur le crédit', key='risque_defaillance')
 
+    #api_url = 'https://florianscoringapi-aec4d97f50b6.herokuapp.com/predictions'    
     api_url = 'http://127.0.0.1:8000/predictions'
     data = {"ID: int(id_filter)"}
-    #res = requests.post(url=api_url, data=json.dumps(inputs))
     res = requests.post(url=api_url, json=inputs)
-    #st.subheader(f"Reponse from API ={res.text}")
 
 
     infos_client = st.sidebar.checkbox("Afficher les informations client ", key='show_client_info')
@@ -236,7 +236,6 @@ with col1:
 
         if infos_graphique:
             st.markdown("<h1 style='text-align: center; color: #5A5E6B; font-size: 24px;'>Variables qui ont le plus influencé le score du client (en bleu positivement, en rouge négativement)</h1>", unsafe_allow_html=True)
-            #id_ = df[df["SK_ID_CURR"] == int(id_filter)]
             fig, ax = plt.subplots(figsize=(15, 15))
             scaler = model.named_steps['scaler']
             df_transformed = pd.DataFrame(scaler.transform(df_shap), columns=df_shap.columns, index=df_shap.index)
@@ -246,15 +245,19 @@ with col1:
             df_shap.rename(columns=features_shap_à_selectionner, inplace=True)  
             st_shap(shap.force_plot(explainer.expected_value, shap_values, client_data, feature_names=df_shap.columns.tolist())) 
             st_shap(shap.summary_plot(shap_values, client_data, feature_names=df_shap.columns.tolist(), max_display = number))  
+        else:
+            st.markdown("Cocher '<span style='color: red; font-weight: bold;'>Afficher les données qui ont influencé le calcul de son score</span>' pour activer la comparaison.", unsafe_allow_html=True)
+            comparaison = value=False
+        
         if comparaison:
             st.markdown("<h1 style='text-align: center; color: #5A5E6B; font-size: 24px;'>Comparaison aux autres clients</h1>", unsafe_allow_html=True)
-
             explainer, shap_values = get_shap_global(lgbmc_model, df_transformed)
             st_shap(shap.summary_plot(shap_values, df_transformed, feature_names=df_shap.columns.tolist(), max_display = number))
             ap_train = feature_engineering(application_train)
             # Actions à exécuter après que "Run" a été activé
             var = st.selectbox("Sélectionner une variable", list(features_numériques_à_selectionner.values()), index=0, key='var_selector')
             feature = list(features_numériques_à_selectionner.keys())[list(features_numériques_à_selectionner.values()).index(var)]
+            X = df_comp[df_comp["SK_ID_CURR"] == int(id_filter)]
             X = feature_engineering(X)
             features_client_value = X[feature].iloc[0] if not X[feature].empty else np.nan
             title = f"Distribution de {var} parmi tous les clients avec position du client actuel"
@@ -267,9 +270,7 @@ with col2:
     enfants = application_test["CNT_CHILDREN"].unique()
     application_test['CODE_GENDER'] = application_test['CODE_GENDER'].apply(lambda x: 'Femme' if x == 'F' else 'Homme')
     sex = application_test["CODE_GENDER"].unique()
-    #application_test['DAYS_EMPLOYED'] = application_test['DAYS_EMPLOYED'].apply(lambda x: -x / 365.25)
     ancieneté = list(range(0, 51))
-    #application_test['AMT_INCOME_TOTAL']
 
     nom = st.text_input("Nom et Prénom")
     sex = st.selectbox("Genre", sex)
@@ -295,7 +296,7 @@ with col2:
 
     if st.button("Calculer la probabilité d'accorder un crédit"):
 
-        sim_df=pd.read_csv(r'C:\cygwin64\openclassrooms\Projet_7\env\python\Notebook\sim_df.csv')
+        sim_df=pd.read_csv(sim_path)
         sim_df=sim_df.round(0)
         columns_to_drop = [ 'Unnamed: 0.1', 'TARGET']
         sim_df=sim_df.drop(columns=columns_to_drop)
