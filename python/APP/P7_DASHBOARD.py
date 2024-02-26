@@ -57,12 +57,12 @@ def feature_engineering(df):
 def get_shap_values(model, df_transformed, client_id):
     explainer = shap.Explainer(model, df_transformed)
     client_data = df_transformed.loc[[client_id]]
-    shap_values = explainer.shap_values(client_data)
+    shap_values = explainer.shap_values(client_data, check_additivity=False)
     return explainer, shap_values, client_data
 
 def get_shap_global(model, df_transformed):
     explainer = shap.Explainer(model, df_transformed)
-    shap_values = explainer.shap_values(df_transformed)
+    shap_values = explainer.shap_values(df_transformed, check_additivity=False)
     return explainer, shap_values
 
 def graphique(df,feature, features_client, title):
@@ -186,8 +186,8 @@ with col1:
 
     risque = st.sidebar.checkbox('Risque de defaillance sur le crédit', key='risque_defaillance')
 
-    #api_url = 'https://florianscoringapi-aec4d97f50b6.herokuapp.com/predictions'    
-    api_url = 'http://127.0.0.1:8000/predictions'
+    #api_url = 'http://127.0.0.1:8000/predictions'
+    api_url = 'https://florianscoringapi-aec4d97f50b6.herokuapp.com/predictions'
     data = {"ID: int(id_filter)"}
     res = requests.post(url=api_url, json=inputs)
 
