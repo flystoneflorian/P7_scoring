@@ -1,5 +1,4 @@
-# OC DS P7 Implementez un modele de scoring
-Formation OpenClassrooms - Parcours data scientist - Projet n°7 - Implementez un modele de scoring - 120 h
+#DS P7 Implementez un modele de scoring
 
 ## Mission : 
  * Construire un modèle de scoring qui donnera une prédiction sur la probabilité de faillite d'un client de façon automatique.
